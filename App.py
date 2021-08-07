@@ -21,7 +21,7 @@ st.image("abc.jpg")
 st.text("Sentiment analysis refers to identifying as well as classifying the sentiments that are expressed in the text source. Tweets are often useful in generating a vast amount of sentiment data upon analysis.")
 sidebar = st.sidebar
 sidebar.title("sidebar title")
-choice_list = ["View_DataSet", "View_Analysis", "EDA"]
+choice_list = ["View_DataSet", "View Sentiment Analysis", "EDA"]
 choice = sidebar.selectbox("Select Option", choice_list)
 
 df = pd.read_csv("dataset/covid19_tweets.csv").head(1000)
@@ -97,10 +97,12 @@ def analyseSentiment():
 
 
 
-    data= df.groupby('sentiment').count().reset_index()
+    data = df.groupby('sentiment').count().reset_index()
     st.dataframe(df)
-    st.plotly_chart(plotPie(data=df, values='text', labels='sentiment', title='title'))
+    st.plotly_chart(plotPie(data=data, values='text', names='sentiment', title='title'), use_container_width=True)
+    st.plotly_chart(plotBar(data=data, x='text', y='sentiment', title='title'), use_container_width=True)
 
+    st.plotly_chart(plotHistogram(data = data , x = "subjectivity", title = 'title'), use_container_width=True)
 
 def analyseEDA():
     st.header('Exploratoy Data Analysis')
@@ -108,7 +110,10 @@ def analyseEDA():
     st.dataframe(df)
 
     st.plotly_chart(plotBar(df.groupby('user_location').count().reset_index().sort_values(
-        'user_location', ascending=False).head(10), 'user_location', 'date', 'title'))
+        'user_location', ascending=False).head(10), 'user_location', 'date', 'title'))  
+
+
+    st.plotly_chart(plotPie(df.groupby('user_verified').count().reset_index(), 'user_verified', ['V', 'N'], 'title'))
 
 
 if choice == choice_list[0]:
