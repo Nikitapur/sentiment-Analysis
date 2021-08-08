@@ -91,18 +91,20 @@ def analyseSentiment():
         else:
             sentiments.append('neutral')
         subjectivity.append(blob.sentiment.subjectivity)
-    
+
     df['sentiment'] = sentiments
     df['subjectivity'] = subjectivity
 
-
-
     data = df.groupby('sentiment').count().reset_index()
     st.dataframe(df)
-    st.plotly_chart(plotPie(data=data, values='text', names='sentiment', title='title'), use_container_width=True)
-    st.plotly_chart(plotBar(data=data, x='text', y='sentiment', title='title'), use_container_width=True)
+    st.plotly_chart(plotPie(data=data, values='text',
+                            names='sentiment', title='title'), use_container_width=True)
+    st.plotly_chart(plotBar(data=data, x='text', y='sentiment',
+                            title='title'), use_container_width=True)
 
-    st.plotly_chart(plotHistogram(data = data , x = "subjectivity", title = 'title'), use_container_width=True)
+    st.plotly_chart(plotHistogram(data=data, x="subjectivity",
+                                  title='title'), use_container_width=True)
+
 
 def analyseEDA():
     st.header('Exploratoy Data Analysis')
@@ -110,10 +112,14 @@ def analyseEDA():
     st.dataframe(df)
 
     st.plotly_chart(plotBar(df.groupby('user_location').count().reset_index().sort_values(
-        'user_location', ascending=False).head(10), 'user_location', 'date', 'title'))  
+        'user_location', ascending=False).head(10), 'user_location', 'date', 'title'), use_container_width=True)
 
+    st.dataframe(df.groupby('user_verified').count().reset_index())
 
-    st.plotly_chart(plotPie(df.groupby('user_verified').count().reset_index(), 'user_verified', ['V', 'N'], 'title'))
+    st.plotly_chart(plotPie(df.groupby('user_verified').count(
+    ).reset_index(), 'user_verified', 'user_name', 'title'), use_container_width=True)
+    st.plotly_chart(plotHistogram(df, 'user_followers',
+                                  'title'), use_container_width=True)
 
 
 if choice == choice_list[0]:
