@@ -6,7 +6,6 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 import re
 import string
-from wordcloud import WordCloud, STOPWORDS
 from textblob import TextBlob
 
 punc = string.punctuation
