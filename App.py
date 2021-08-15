@@ -108,10 +108,16 @@ def analyseSentiment():
 def analyseEDA():
     st.header('Exploratoy Data Analysis')
 
-    st.dataframe(df)
+    data = df.groupby('user_location').count().reset_index().sort_values(
+        'user_name', ascending=False).head(10)
+    st.plotly_chart(plotBar(data, 'user_location', 'date',
+                            'title'), use_container_width=True)
 
-    st.plotly_chart(plotBar(df.groupby('user_location').count().reset_index().sort_values(
-        'user_location', ascending=False).head(10), 'user_location', 'date', 'title'), use_container_width=True)
+    data = df.groupby('source').count().reset_index().sort_values(
+        'user_name', ascending=False).head(10)
+    st.dataframe(data)
+    st.plotly_chart(plotPie(data, 'source', 'date',
+                            'title'), use_container_width=True)
 
     st.dataframe(df.groupby('user_verified').count().reset_index())
 
@@ -119,6 +125,15 @@ def analyseEDA():
     ).reset_index(), 'user_verified', 'user_name', 'title'), use_container_width=True)
     st.plotly_chart(plotHistogram(df, 'user_followers',
                                   'title'), use_container_width=True)
+
+
+    data["date"] = pd.to_datetime(data["date"])
+    data["Month"] = data["date"].apply(lambda x : x.month)
+    data["day"] = data["date"].apply(lambda x : x.dayofweek)
+    dmap = {0:'Mon',1:'Tue',2:'Wed',3:'Thu',4:'Fri',5:'Sat',6:'Sun'}
+    data["day"] = data["day"].map(dmap)
+
+    st.plotly_chart()
 
 
 if choice == choice_list[0]:
